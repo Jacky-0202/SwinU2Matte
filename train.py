@@ -18,7 +18,7 @@ from swin_u2_matte.utils.plotter import plot_training_curves
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 LEARNING_RATE = 1e-4
 BATCH_SIZE = 2
-NUM_EPOCHS = 100  # Set to 100
+NUM_EPOCHS = 100
 IMG_SIZE = 768
 DATA_ROOT = "./data/DIS5K"  # Your dataset path
 ROOT_OUTPUT_DIR = "./checkpoints"
@@ -34,7 +34,7 @@ def train_fn(loader, model, optimizer, loss_fn, scaler):
         masks = data['mask'].to(DEVICE)
 
         # Mixed Precision Forward
-        with torch.amp.autocast('cuda'):
+        with autocast('cuda'):
             outputs = model(images)
             
             # Deep Supervision: Sum loss of all outputs
@@ -119,7 +119,7 @@ def main():
     scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=5, verbose=True)
     
     loss_fn = SwinU2Loss(bce_w=1.0, iou_w=1.0, ssim_w=1.0).to(DEVICE)
-    scaler = torch.amp.GradScaler('cuda')
+    scaler = GradScaler('cuda')
 
     # 5. Training Loop
     best_val_loss = float("inf")

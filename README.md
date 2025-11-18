@@ -30,7 +30,7 @@ The features are fused at the **Stage 3 (96x96)** bottleneck, allowing the Trans
 
 1.  **Clone the repository**
     ```bash
-    git clone [https://github.com/Jacky-0202/SwinU2Matte.git](https://github.com/Jacky-0202/SwinU2Matte.git)
+    git clone https://github.com/Jacky-0202/SwinU2Matte.git
     cd SwinU2Matte
     ```
 
