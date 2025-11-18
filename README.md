@@ -78,7 +78,7 @@ python train.py
 
 - **Checkpoints**: Saved in `checkpoints/run_TIMESTAMP/`.
 - **Logs & Curves**: Training logs and loss/accuracy curves are saved in the same directory.
-- **Settings**: Adjust `BATCH_SIZE`, `LR`, and `EPOCHS` in `train.py`.
+- **Settings**: Adjust `BATCH_SIZE`, `LR`, `DATA_ROOT`, and `EPOCHS` in `train.py`.
 
 ### 2. Inference (Testing)
 
