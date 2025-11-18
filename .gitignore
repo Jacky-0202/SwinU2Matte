@@ -12,7 +12,6 @@ pretrained/
 checkpoints/
 *.pth
 *.log
-*.txt
 
 # --- Inference Results ---
 results/
