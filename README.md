@@ -22,7 +22,7 @@ The model consists of two parallel branches:
 
 The features are fused at the **Stage 3 (96x96)** bottleneck, allowing the Transformer to act as a "global guide" for the U-Net's detail-oriented layers.
 
-![Comparison Result](figures/comparison.png) *(Left: Input Image, Middle: U^2-Net, Right: SwinU2Matte)*
+![Comparison Result](figures/comparison.png) *(Left: U^2-Net, Right: SwinU2Matte)*
 
 ## 📦 Installation
 
