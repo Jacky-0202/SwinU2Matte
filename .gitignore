@@ -1,0 +1,23 @@
+# --- Python & Environment ---
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+
+# --- Large Data & Assets (Too big for Git) ---
+data/
+pretrained/
+
+# --- Training Outputs (Logs & Models) ---
+checkpoints/
+*.pth
+*.log
+*.txt
+
+# --- Inference Results ---
+results/
+
+# --- IDE & System Files ---
+.vscode/
+.idea/
+.DS_Store
