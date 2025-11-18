@@ -4,17 +4,15 @@ __pycache__/
 *.so
 .venv/
 
-# --- Large Data & Assets (Too big for Git) ---
-data/
-pretrained/
+data/*
+checkpoints/*
+pretrained/*
+results/*
 
-# --- Training Outputs (Logs & Models) ---
-checkpoints/
-*.pth
-*.log
-
-# --- Inference Results ---
-results/
+!data/.gitkeep
+!checkpoints/.gitkeep
+!pretrained/.gitkeep
+!results/.gitkeep
 
 # --- IDE & System Files ---
 .vscode/
