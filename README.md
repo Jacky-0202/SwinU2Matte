@@ -41,6 +41,7 @@ The features are fused at the **Stage 3 (96x96)** bottleneck, allowing the Trans
     pip install -r requirements.txt
     ```
     *(Main requirements: `torch`, `torchvision`, `timm`, `opencv-python`, `Pillow`, `tqdm`, `matplotlib`)*
+    > ⚠️ **Important**: Please ensure the `torch` version matches your specific CUDA environment. It is highly recommended to visit the [official PyTorch website](https://pytorch.org/get-started/locally/) to get the correct installation command for your OS and CUDA version before installing other requirements.
 
 3.  **Download Pretrained Weights**
     Download the official Swin-Large weights (`swin_large_patch4_window12_384_22k.pth`) and place it in the `pretrained/` folder.

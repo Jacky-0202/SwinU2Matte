@@ -78,10 +78,11 @@ def check_accuracy(loader, model, loss_fn):
             images = data['image'].to(DEVICE)
             masks = data['mask'].to(DEVICE)
 
-            outputs = model(images)
-            d0 = outputs[0] # Final output
-            
-            loss = loss_fn(d0, masks)
+            with autocast('cuda'):
+                outputs = model(images)
+                d0 = outputs[0] # Final output
+                
+                loss = loss_fn(d0, masks)
             acc, f1 = calculate_metrics(d0, masks)
 
             total_loss += loss.item()
