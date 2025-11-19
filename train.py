@@ -22,6 +22,8 @@ NUM_EPOCHS = 100
 IMG_SIZE = 768
 DATA_ROOT = "./data/DIS5K"  # Your dataset path
 ROOT_OUTPUT_DIR = "./checkpoints"
+# If set to None or the path does not exist, training will start from scratch.
+RESUME_PATH = "./checkpoints/swin_u2net.pth"
 
 def train_fn(loader, model, optimizer, loss_fn, scaler):
     model.train()
@@ -120,6 +122,20 @@ def main():
     logger.info("Initializing SwinU2Matte...")
     model = SwinU2Matte(in_ch=3, out_ch=1).to(DEVICE)
     
+    if RESUME_PATH and os.path.exists(RESUME_PATH):
+        logger.info(f"Wait... Loading checkpoint from: {RESUME_PATH}")
+        try:
+            state_dict = torch.load(RESUME_PATH, map_location=DEVICE)
+            model.load_state_dict(state_dict)
+            logger.info(">> Checkpoint loaded successfully! Continuing training...")
+        except Exception as e:
+            logger.error(f"Failed to load checkpoint: {e}")
+            logger.info("Starting from scratch instead.")
+    else:
+        if RESUME_PATH:
+             logger.warning(f"Checkpoint path not found: {RESUME_PATH}")
+        logger.info("No checkpoint loaded. Starting from scratch.")
+
     optimizer = optim.AdamW(model.parameters(), lr=LEARNING_RATE, weight_decay=1e-4)
     
     # 2. Initialize Scheduler
