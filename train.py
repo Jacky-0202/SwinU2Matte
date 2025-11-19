@@ -1,7 +1,7 @@
 import os
 import torch
 import torch.optim as optim
-from torch.cuda.amp import autocast, GradScaler
+from torch.amp import autocast, GradScaler
 from torch.optim.lr_scheduler import ReduceLROnPlateau  # 1. Import Scheduler
 from tqdm import tqdm
 from datetime import datetime
