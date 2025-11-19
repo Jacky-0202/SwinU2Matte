@@ -28,6 +28,7 @@ def train_fn(loader, model, optimizer, loss_fn, scaler):
     loop = tqdm(loader, desc="Train")
     total_loss = 0
     total_acc = 0
+    total_f1 = 0
     
     for batch_idx, data in enumerate(loop):
         images = data['image'].to(DEVICE)
@@ -49,21 +50,25 @@ def train_fn(loader, model, optimizer, loss_fn, scaler):
         scaler.update()
 
         # Metrics (Use only final output d0)
-        acc, _ = calculate_metrics(outputs[0], masks)
+        acc, f1 = calculate_metrics(outputs[0], masks)
 
         total_loss += loss.item()
         total_acc += acc
+        total_f1 += f1
         
-        loop.set_postfix(loss=loss.item(), acc=acc)
+        loop.set_postfix(loss=loss.item(), acc=acc, f1=f1)
 
     avg_loss = total_loss / len(loader)
     avg_acc = total_acc / len(loader)
-    return avg_loss, avg_acc
+    avg_f1 = total_f1 / len(loader)
+
+    return avg_loss, avg_acc, avg_f1
 
 def check_accuracy(loader, model, loss_fn):
     model.eval()
     total_loss = 0
     total_acc = 0
+    total_f1 = 0
     loop = tqdm(loader, desc="Val")
 
     with torch.no_grad():
@@ -75,16 +80,19 @@ def check_accuracy(loader, model, loss_fn):
             d0 = outputs[0] # Final output
             
             loss = loss_fn(d0, masks)
-            acc, _ = calculate_metrics(d0, masks)
+            acc, f1 = calculate_metrics(d0, masks)
 
             total_loss += loss.item()
             total_acc += acc
+            total_f1 += f1
             
-            loop.set_postfix(val_loss=loss.item(), val_acc=acc)
+            loop.set_postfix(val_loss=loss.item(), val_acc=acc, val_f1=f1)
 
     avg_loss = total_loss / len(loader)
     avg_acc = total_acc / len(loader)
-    return avg_loss, avg_acc
+    avg_f1 = total_f1 / len(loader)
+
+    return avg_loss, avg_acc, avg_f1
 
 def main():
     # 1. Setup Run Directory (Timestamped)
@@ -126,7 +134,8 @@ def main():
     
     history = {
         'train_loss': [], 'val_loss': [],
-        'train_acc': [], 'val_acc': []
+        'train_acc': [], 'val_acc': [],
+        'train_f1': [], 'val_f1': [] 
     }
 
     logger.info("Start Training...")
@@ -135,10 +144,10 @@ def main():
         logger.info(f"\nEpoch [{epoch+1}/{NUM_EPOCHS}]")
         
         # Train Step
-        train_loss, train_acc = train_fn(train_loader, model, optimizer, loss_fn, scaler)
+        train_loss, train_acc, train_f1 = train_fn(train_loader, model, optimizer, loss_fn, scaler)
         
         # Validation Step
-        val_loss, val_acc = check_accuracy(val_loader, model, loss_fn)
+        val_loss, val_acc, val_f1 = check_accuracy(val_loader, model, loss_fn)
         
         # 3. Step Scheduler
         scheduler.step(val_loss)
@@ -146,19 +155,22 @@ def main():
         # 4. Log Current LR
         current_lr = optimizer.param_groups[0]['lr']
         logger.info(f"LR: {current_lr:.2e}")
-        logger.info(f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.4f}")
-        logger.info(f"Val Loss:   {val_loss:.4f} | Val Acc:   {val_acc:.4f}")
+        logger.info(f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.4f} | Train F1: {train_f1:.4f}")
+        logger.info(f"Val Loss:   {val_loss:.4f} | Val Acc:   {val_acc:.4f} | Val F1:   {val_f1:.4f}")
 
         # Update History
         history['train_loss'].append(train_loss)
         history['val_loss'].append(val_loss)
         history['train_acc'].append(train_acc)
         history['val_acc'].append(val_acc)
+        history['train_f1'].append(train_f1)
+        history['val_f1'].append(val_f1)
 
         # Plot Curves
         plot_training_curves(
             history['train_loss'], history['val_loss'],
             history['train_acc'], history['val_acc'],
+            history['train_f1'], history['val_f1'],
             run_dir
         )
 

@@ -27,7 +27,7 @@ def get_model_path():
     2. If not found, looks for the latest run in './checkpoints/run_*/'.
     """
     # 1. Priority: Manually placed best model
-    manual_best = os.path.join(CHECKPOINT_ROOT, "last_model.pth")
+    manual_best = os.path.join(CHECKPOINT_ROOT, "best_model.pth")
     if os.path.exists(manual_best):
         print(f"Found manually selected model: {manual_best}")
         return manual_best
