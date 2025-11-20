@@ -16,7 +16,7 @@ from swin_u2_matte.utils.plotter import plot_training_curves
 
 # --- Hyperparameters ---
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-LEARNING_RATE = 1e-4
+LEARNING_RATE = 1e-5
 BATCH_SIZE = 2
 NUM_EPOCHS = 100
 IMG_SIZE = 768
@@ -81,8 +81,9 @@ def check_accuracy(loader, model, loss_fn):
             with autocast('cuda'):
                 outputs = model(images)
                 d0 = outputs[0] # Final output
-                
+            
                 loss = loss_fn(d0, masks)
+                
             acc, f1 = calculate_metrics(d0, masks)
 
             total_loss += loss.item()
@@ -141,7 +142,7 @@ def main():
     
     # 2. Initialize Scheduler
     # Reduce LR if validation loss stops improving for 5 epochs
-    scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=5, verbose=True)
+    scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=5)
     
     loss_fn = SwinU2Loss(bce_w=1.0, iou_w=1.0, ssim_w=1.0).to(DEVICE)
     scaler = GradScaler('cuda')

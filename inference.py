@@ -18,7 +18,7 @@ IMG_SIZE = 768
 # Directories
 INPUT_DIR = "./data/test_images"
 OUTPUT_DIR = "./results"
-CHECKPOINT_ROOT = "./checkpoints/run_20251118_111711"
+CHECKPOINT_ROOT = "./checkpoints"
 
 def get_model_path():
     """
@@ -27,7 +27,7 @@ def get_model_path():
     2. If not found, looks for the latest run in './checkpoints/run_*/'.
     """
     # 1. Priority: Manually placed best model
-    manual_best = os.path.join(CHECKPOINT_ROOT, "best_model.pth")
+    manual_best = os.path.join(CHECKPOINT_ROOT, "swin_u2net.pth")
     if os.path.exists(manual_best):
         print(f"Found manually selected model: {manual_best}")
         return manual_best
